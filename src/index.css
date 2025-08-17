@@ -6,71 +6,71 @@
 
 @layer base {
   :root {
-    /* Base colors */
+    /* Base colors - Clean light mode palette */
     --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
+    --foreground: 215 25% 27%; /* slate-700 */
 
     /* Card and surface colors */
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 215 25% 27%;
 
     /* Popover colors */
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 215 25% 27%;
 
-    /* Brand colors - Modern blue gradient */
-    --primary: 210 100% 56%;
+    /* Brand colors - Modern blue system */
+    --primary: 217 91% 60%; /* blue-500 */
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 210 100% 48%;
-    --primary-light: 210 100% 96%;
+    --primary-hover: 217 91% 53%; /* blue-600 */
+    --primary-light: 217 91% 95%; /* blue-50 */
 
-    /* Secondary colors - Elegant purple */
-    --secondary: 250 100% 96%;
-    --secondary-foreground: 250 85% 25%;
-    --secondary-hover: 250 100% 92%;
+    /* Secondary colors - Neutral grays */
+    --secondary: 210 20% 98%; /* neutral-50 */
+    --secondary-foreground: 215 25% 15%; /* slate-900 */
+    --secondary-hover: 210 20% 95%;
 
     /* Muted colors */
-    --muted: 220 15% 96%;
-    --muted-foreground: 215 25% 45%;
+    --muted: 210 20% 98%; /* neutral-50 */
+    --muted-foreground: 215 16% 47%; /* slate-600 */
 
-    /* Accent colors - Vibrant orange */
-    --accent: 25 100% 60%;
+    /* Accent colors - Consistent blue system */
+    --accent: 217 91% 60%; /* blue-500 */
     --accent-foreground: 0 0% 100%;
-    --accent-hover: 25 100% 52%;
+    --accent-hover: 217 91% 53%; /* blue-600 */
 
     /* Status colors */
-    --destructive: 0 85% 60%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --success: 145 65% 50%;
+    --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
-    --warning: 45 100% 55%;
+    --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
     /* Border and input colors */
-    --border: 220 15% 88%;
-    --input: 220 15% 92%;
-    --input-focus: 210 100% 88%;
-    --ring: 210 100% 56%;
+    --border: 220 13% 91%; /* neutral-200 */
+    --input: 220 13% 91%; /* neutral-200 */
+    --input-focus: 217 91% 60%; /* blue-500 */
+    --ring: 217 91% 60%; /* blue-500 */
+
+    /* Disabled states */
+    --disabled: 220 14% 96%; /* neutral-100 */
+    --disabled-foreground: 220 9% 46%; /* neutral-400 */
 
     /* Radius */
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 100% 56%), hsl(250 85% 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(250 100% 96%), hsl(220 15% 96%));
-    --gradient-accent: linear-gradient(135deg, hsl(25 100% 60%), hsl(45 100% 55%));
+    /* Enhanced shadows for depth */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-focus: 0 0 0 3px rgb(59 130 246 / 0.1);
 
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(215 25% 15% / 0.05);
-    --shadow-base: 0 4px 6px -1px hsl(215 25% 15% / 0.1), 0 2px 4px -1px hsl(215 25% 15% / 0.06);
-    --shadow-md: 0 10px 15px -3px hsl(215 25% 15% / 0.1), 0 4px 6px -2px hsl(215 25% 15% / 0.05);
-    --shadow-lg: 0 20px 25px -5px hsl(215 25% 15% / 0.1), 0 10px 10px -5px hsl(215 25% 15% / 0.04);
-    --shadow-glow: 0 0 30px hsl(210 100% 56% / 0.3);
-
-    /* Animations */
+    /* Animation variables */
     --duration-fast: 0.15s;
-    --duration-normal: 0.3s;
-    --duration-slow: 0.5s;
+    --duration-normal: 0.2s;
+    --duration-slow: 0.3s;
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
@@ -186,43 +186,59 @@
 }
 
 @layer components {
-  /* Animation utilities */
-  .animate-in {
-    animation-duration: var(--duration-normal);
-    animation-timing-function: var(--ease-out);
-    animation-fill-mode: both;
-  }
-
-  .animate-out {
-    animation-duration: var(--duration-fast);
-    animation-timing-function: var(--ease-in);
-    animation-fill-mode: both;
-  }
-
-  /* Focus ring utility */
+  /* Focus ring utility - Modern blue focus */
   .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-shadow duration-normal;
   }
 
-  /* Gradient backgrounds */
-  .bg-gradient-primary {
-    background: var(--gradient-primary);
-  }
-
-  .bg-gradient-secondary {
-    background: var(--gradient-secondary);
-  }
-
-  .bg-gradient-accent {
-    background: var(--gradient-accent);
-  }
-
-  /* Shadow utilities */
+  /* Enhanced shadow utilities */
   .shadow-elegant {
     box-shadow: var(--shadow-md);
   }
 
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
+  .shadow-inner-soft {
+    box-shadow: var(--shadow-inner);
+  }
+
+  .shadow-focus {
+    box-shadow: var(--shadow-focus);
+  }
+
+  /* Transition utilities for smooth interactions */
+  .transition-smooth {
+    transition: all var(--duration-normal) var(--ease-out);
+  }
+
+  .transition-colors-smooth {
+    transition: color var(--duration-normal) var(--ease-out), 
+                background-color var(--duration-normal) var(--ease-out), 
+                border-color var(--duration-normal) var(--ease-out);
+  }
+
+  /* Disabled state utilities */
+  .disabled-style {
+    @apply bg-disabled text-disabled-foreground cursor-not-allowed opacity-60;
+  }
+
+  /* Interactive hover utilities */
+  .hover-lift {
+    @apply transition-transform duration-normal hover:translate-y-[-1px];
+  }
+
+  .hover-glow {
+    @apply transition-shadow duration-normal hover:shadow-md;
+  }
+
+  /* Table utilities */
+  .table-row-hover {
+    @apply hover:bg-muted/50 transition-colors duration-normal;
+  }
+
+  .table-row-selected {
+    @apply bg-primary-light border-primary/20;
+  }
+
+  .table-row-zebra:nth-child(even) {
+    @apply bg-muted/30;
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, FileText, Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export interface Column<T> {
@@ -27,6 +27,7 @@ export interface DataTableProps<T> {
   onRowSelect?: (selectedRows: T[]) => void;
   className?: string;
   emptyMessage?: string;
+  emptyIcon?: React.ReactNode;
   rowKey?: keyof T | ((row: T, index: number) => string | number);
 }
 
@@ -38,6 +39,7 @@ function DataTable<T extends Record<string, any>>({
   onRowSelect,
   className,
   emptyMessage = 'No data available',
+  emptyIcon,
   rowKey = 'id',
 }: DataTableProps<T>) {
   const [sortConfig, setSortConfig] = useState<SortConfig<T> | null>(null);
@@ -131,13 +133,13 @@ function DataTable<T extends Record<string, any>>({
     if (!column?.sortable) return null;
 
     if (!sortConfig || sortConfig.key !== columnKey) {
-      return <ChevronsUpDown className="h-4 w-4 text-muted-foreground ml-1" />;
+      return <ChevronsUpDown className="h-4 w-4 text-muted-foreground/60 ml-2 transition-colors-smooth" />;
     }
 
     return sortConfig.direction === 'asc' ? (
-      <ChevronUp className="h-4 w-4 text-primary ml-1" />
+      <ChevronUp className="h-4 w-4 text-primary ml-2 transition-colors-smooth" />
     ) : (
-      <ChevronDown className="h-4 w-4 text-primary ml-1" />
+      <ChevronDown className="h-4 w-4 text-primary ml-2 transition-colors-smooth" />
     );
   };
 
@@ -151,30 +153,34 @@ function DataTable<T extends Record<string, any>>({
 
   if (loading) {
     return (
-      <div className={cn('rounded-lg border bg-card shadow-elegant', className)}>
-        <div className="flex items-center justify-center h-48">
-          <div className="flex items-center space-x-2 text-muted-foreground">
-            <Loader2 className="h-6 w-6 animate-spin" />
-            <span>Loading...</span>
+      <div className={cn('rounded-xl border border-border bg-card shadow-elegant overflow-hidden', className)}>
+        <div className="flex flex-col items-center justify-center h-64 p-8">
+          <div className="flex items-center space-x-3 text-muted-foreground mb-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <span className="text-lg font-medium">Loading data...</span>
           </div>
+          <p className="text-sm text-muted-foreground">Please wait while we fetch your data</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={cn('rounded-lg border bg-card shadow-elegant overflow-hidden', className)}>
+    <div className={cn('rounded-xl border border-border bg-card shadow-elegant overflow-hidden', className)}>
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-muted/50 border-b">
-            <tr>
+          <thead>
+            <tr className="border-b border-border bg-muted/30">
               {selectable && (
-                <th className="w-12 px-4 py-3 text-left">
+                <th className="w-12 px-6 py-4 text-left">
                   <Checkbox
                     checked={isAllSelected || isPartiallySelected}
                     onCheckedChange={handleSelectAll}
                     aria-label="Select all rows"
-                    className={isPartiallySelected ? "data-[state=checked]:bg-muted" : ""}
+                    className={cn(
+                      "transition-colors-smooth",
+                      isPartiallySelected && "data-[state=checked]:bg-muted-foreground"
+                    )}
                   />
                 </th>
               )}
@@ -182,10 +188,14 @@ function DataTable<T extends Record<string, any>>({
                 <th
                   key={String(column.key)}
                   className={cn(
-                    'px-4 py-3 text-sm font-semibold text-muted-foreground',
+                    'px-6 py-4 text-sm font-semibold text-foreground/90',
+                    'first:pl-6 last:pr-6',
                     column.align === 'center' && 'text-center',
                     column.align === 'right' && 'text-right',
-                    column.sortable && 'cursor-pointer hover:text-foreground transition-colors duration-fast select-none'
+                    column.sortable && [
+                      'cursor-pointer hover:text-primary transition-colors-smooth select-none',
+                      'hover:bg-muted/50 focus:bg-muted/50 focus:outline-none'
+                    ]
                   )}
                   style={{ width: column.width }}
                   onClick={() => handleSort(column.key)}
@@ -205,26 +215,31 @@ function DataTable<T extends Record<string, any>>({
                       : undefined
                   }
                 >
-                  <div className="flex items-center">
-                    {column.title}
+                  <div className="flex items-center justify-start">
+                    <span>{column.title}</span>
                     {getSortIcon(column.key)}
                   </div>
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border/50">
             {sortedData.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length + (selectable ? 1 : 0)}
-                  className="px-4 py-12 text-center text-muted-foreground"
+                  className="px-6 py-16 text-center"
                 >
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                      <span className="text-xl">📄</span>
+                  <div className="flex flex-col items-center space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center">
+                      {emptyIcon || <FileText className="h-8 w-8 text-muted-foreground/60" />}
                     </div>
-                    <p>{emptyMessage}</p>
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-medium text-foreground">{emptyMessage}</h3>
+                      <p className="text-sm text-muted-foreground max-w-sm">
+                        There's no data to display at the moment. Try adjusting your filters or adding new entries.
+                      </p>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -232,23 +247,28 @@ function DataTable<T extends Record<string, any>>({
               sortedData.map((row, index) => {
                 const key = getRowKey(row, index);
                 const isSelected = selectedRows.has(key);
+                const isEven = index % 2 === 0;
                 
                 return (
                   <tr
                     key={key}
                     className={cn(
-                      'border-b border-border/50 hover:bg-muted/30 transition-colors duration-fast',
-                      isSelected && 'bg-primary-light'
+                      'transition-colors-smooth group',
+                      'hover:bg-muted/40 hover:shadow-sm',
+                      isSelected && 'bg-primary-light border-l-4 border-l-primary',
+                      !isSelected && isEven && 'bg-muted/20',
+                      !isSelected && !isEven && 'bg-background'
                     )}
                   >
                     {selectable && (
-                      <td className="px-4 py-3">
+                      <td className="px-6 py-4">
                         <Checkbox
                           checked={isSelected}
                           onCheckedChange={(checked) => 
                             handleRowSelection(key, checked as boolean)
                           }
                           aria-label={`Select row ${index + 1}`}
+                          className="transition-colors-smooth"
                         />
                       </td>
                     )}
@@ -256,7 +276,8 @@ function DataTable<T extends Record<string, any>>({
                       <td
                         key={String(column.key)}
                         className={cn(
-                          'px-4 py-3 text-sm text-foreground',
+                          'px-6 py-4 text-sm text-foreground',
+                          'first:pl-6 last:pr-6',
                           column.align === 'center' && 'text-center',
                           column.align === 'right' && 'text-right'
                         )}
@@ -273,8 +294,24 @@ function DataTable<T extends Record<string, any>>({
       </div>
       
       {selectedRows.size > 0 && (
-        <div className="px-4 py-2 bg-primary-light border-t text-sm text-primary">
-          {selectedRows.size} row{selectedRows.size !== 1 ? 's' : ''} selected
+        <div className="px-6 py-4 bg-primary-light/80 border-t border-primary/20 backdrop-blur-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-sm font-medium text-primary">
+                {selectedRows.size} row{selectedRows.size !== 1 ? 's' : ''} selected
+              </span>
+            </div>
+            <button 
+              onClick={() => {
+                setSelectedRows(new Set());
+                onRowSelect?.([]);
+              }}
+              className="text-xs text-primary hover:text-primary-hover transition-colors-smooth underline"
+            >
+              Clear selection
+            </button>
+          </div>
         </div>
       )}
     </div>

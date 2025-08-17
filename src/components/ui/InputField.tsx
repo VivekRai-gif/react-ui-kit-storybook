@@ -4,22 +4,40 @@ import { cn } from '@/lib/utils';
 import { Eye, EyeOff, X, Loader2 } from 'lucide-react';
 
 const inputVariants = cva(
-  'flex w-full transition-all duration-normal ease-in-out focus-ring disabled:cursor-not-allowed disabled:opacity-50',
+  'flex w-full rounded-lg text-foreground transition-colors-smooth focus-ring disabled:disabled-style placeholder:text-muted-foreground',
   {
     variants: {
       variant: {
-        filled: 'bg-secondary border border-transparent focus:border-primary focus:bg-background',
-        outlined: 'bg-transparent border border-border focus:border-primary focus:shadow-sm',
-        ghost: 'bg-transparent border-0 border-b-2 border-border focus:border-primary rounded-none px-0',
+        filled: [
+          'bg-secondary border border-transparent shadow-inner-soft',
+          'hover:bg-secondary-hover hover:shadow-sm',
+          'focus:bg-background focus:border-primary focus:shadow-focus',
+          'disabled:hover:bg-disabled'
+        ],
+        outlined: [
+          'bg-background border border-border shadow-sm',
+          'hover:border-muted-foreground/50 hover:shadow-md',
+          'focus:border-primary focus:shadow-focus',
+          'disabled:border-border'
+        ],
+        ghost: [
+          'bg-transparent border-0 border-b-2 border-border rounded-none px-0',
+          'hover:border-muted-foreground/70',
+          'focus:border-primary focus:shadow-none',
+          'disabled:border-disabled-foreground'
+        ],
       },
       size: {
-        sm: 'h-8 px-3 text-sm',
-        md: 'h-10 px-4 text-base',
-        lg: 'h-12 px-5 text-lg',
+        sm: 'h-9 px-3 text-sm',
+        md: 'h-11 px-4 text-base',
+        lg: 'h-13 px-5 text-lg',
       },
       state: {
         default: '',
-        invalid: 'border-destructive focus:border-destructive focus:ring-destructive/20',
+        invalid: [
+          'border-destructive focus:border-destructive focus:ring-destructive/20',
+          'bg-destructive/5'
+        ],
         loading: 'pr-10',
       },
     },
@@ -32,7 +50,7 @@ const inputVariants = cva(
 );
 
 const labelVariants = cva(
-  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors-smooth',
   {
     variants: {
       state: {
@@ -47,7 +65,7 @@ const labelVariants = cva(
   }
 );
 
-const helperTextVariants = cva('text-xs mt-1', {
+const helperTextVariants = cva('text-xs mt-2 transition-colors-smooth', {
   variants: {
     state: {
       default: 'text-muted-foreground',
@@ -127,14 +145,14 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     const displayType = isPassword && showPassword ? 'text' : type;
 
     return (
-      <div className={cn('space-y-1', containerClassName)}>
+      <div className={cn('space-y-2', containerClassName)}>
         {label && (
           <label className={cn(labelVariants({ state: inputState }))}>
             {label}
           </label>
         )}
         
-        <div className="relative">
+        <div className="relative group">
           <input
             type={displayType}
             className={cn(
@@ -157,7 +175,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
 
           {loading && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
             </div>
           )}
 
@@ -166,7 +184,9 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
               type="button"
               onClick={togglePasswordVisibility}
               className={cn(
-                'absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors duration-fast',
+                'absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground',
+                'hover:text-primary transition-colors-smooth focus:outline-none focus:text-primary',
+                'rounded-md focus-ring',
                 showClearButton && 'right-8'
               )}
               tabIndex={-1}
@@ -180,7 +200,11 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             <button
               type="button"
               onClick={handleClear}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors duration-fast"
+              className={cn(
+                'absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground',
+                'hover:text-primary transition-colors-smooth focus:outline-none focus:text-primary',
+                'rounded-md focus-ring'
+              )}
               tabIndex={-1}
               aria-label="Clear input"
             >

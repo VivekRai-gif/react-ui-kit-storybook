@@ -64,6 +64,10 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				disabled: {
+					DEFAULT: 'hsl(var(--disabled))',
+					foreground: 'hsl(var(--disabled-foreground))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
